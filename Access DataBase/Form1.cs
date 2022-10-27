@@ -31,16 +31,16 @@ namespace Access_DataBase
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LlamarGrid();
+            LlenarGrid();
         }
-        void LlamarGrid()
+        void LlenarGrid()
         {
             conn.Open();
             OleDbDataAdapter da = new OleDbDataAdapter("select * from Personas order by Id", conn);
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridView1.DataSource = dt;
-            conn.Close();   
+            conn.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -51,12 +51,27 @@ namespace Access_DataBase
             conn.Close();
             MessageBox.Show("Registro exitosamente guardo");
             //limpiarTexto
-            LlamarGrid();
+            LlenarGrid();
+        }
+
+        void limpiarTexto()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand("update Personas set Nombre='" +
+                textBox2.Text + "', Edad=" + textBox3.Text + " where Id=" +
+                textBox1.Text + "", conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            MessageBox.Show("Registro actualizado. ");
+            limpiarTexto();
+            LlenarGrid();
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -72,6 +87,20 @@ namespace Access_DataBase
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //textBox1.Enabled = true;
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand("delete from Personas where Id="
+                + textBox1.Text + " ", conn);
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            MessageBox.Show("Registro alineado");
+            limpiarTexto();
+            LlenarGrid();
+            //textBox1.Enabled =false;
         }
     }
 }
